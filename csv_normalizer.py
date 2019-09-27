@@ -111,18 +111,21 @@ def get_all_csv_files(source, target):
         raise FileNotFoundError('Pasta de origem {} sem ficheiros csv.'.format(source))
 
 
-def normalizer_alt(file_name, in_file_name, out_file_name):
+def normalizer_alt(file_name, in_file_name, out_file_name):  # Used for the replace of a single symbol and some particular cases
     reg = re.compile(r'"')
 
     with open(in_file_name) as in_file:
         with open(out_file_name, 'w') as out_file:
             for line in in_file:
-                count = len(re.findall(reg, line))
-                if count:
-                    # iterator = re.finditer(reg, line)
-                    line = re.sub(reg, '|', line)
+                # print(line)
+                if line == '''"4";"16";"2018/N2-1/51618";"20180305";"20092";"APOS A REPARAÇÃO OR 51584 VIAT";"20180305"\n''':
+                    print('line found!', line)
+                # count = len(re.findall(reg, line))
+                # if count:
+                #     # iterator = re.finditer(reg, line)
+                #     line = re.sub(reg, '|', line)
 
-                    out_file.write(line)
+                out_file.write(line)
 
         out_file.close()
     in_file.close()
@@ -209,9 +212,9 @@ def normalizer(file_name, in_file_name, out_file_name):
 
 
 if __name__ == '__main__':
-    source_folder = 'C:\\Users\\mrpc\\Documents\\test_files\\'
-    target_folder = 'C:\\Users\\mrpc\\Documents\\test_files\\files_treated\\'
-    # source_folder = sys.argv[1]
-    # target_folder = sys.argv[2]
+    # source_folder = 'C:\\Users\\mrpc\\Documents\\test_files\\'
+    # target_folder = 'C:\\Users\\mrpc\\Documents\\test_files\\files_treated\\'
+    source_folder = sys.argv[1]
+    target_folder = sys.argv[2]
     main(source_folder, target_folder)
 
