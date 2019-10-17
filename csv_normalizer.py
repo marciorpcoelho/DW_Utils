@@ -1,5 +1,6 @@
 import sys
 from os import listdir
+import os
 import re
 import pyodbc
 import time
@@ -22,10 +23,18 @@ def main(source, target):
 
     for file_name, in_file_name_path, out_file_name_and_path in zip(files_name, in_files_name_and_path, out_files_name_and_path):
         # normalizer_alt(file_name, in_file_name_path, out_file_name_and_path)
-        step_1_count, step_2_lines_input, step_2_lines_output, normalize_time = normalizer(file_name, in_file_name_path, out_file_name_and_path)
+        out_file_name_and_path, same_name_flag = duplicate_folder_checkup(in_file_name_path, out_file_name_and_path)
+        step_1_count, step_2_lines_input, step_2_lines_output, normalize_time = normalizer(file_name, in_file_name_path, out_file_name_and_path, same_name_flag)
         log_creation(step_1_count, step_2_lines_input, step_2_lines_output, file_name, target, normalize_time)
 
     print('Total Elapsed Time: {:.2f}'.format(time.time() - start))
+
+
+def duplicate_folder_checkup(in_file, out_file):
+    if in_file == out_file:
+        return out_file[:-4] + '_temp' + out_file[-4:], 1
+    else:
+        return out_file, 0
 
 
 def log_creation(step_1_count, step_2_lines_input, step_2_lines_output, file_name, target, timer):
@@ -131,7 +140,7 @@ def normalizer_alt(file_name, in_file_name, out_file_name):  # Used for the repl
     in_file.close()
 
 
-def normalizer(file_name, in_file_name, out_file_name):
+def normalizer(file_name, in_file_name, out_file_name, same_name_flag=0):
     print('Normalizing file {}...'.format(file_name))
 
     start = time.time()
@@ -205,6 +214,10 @@ def normalizer(file_name, in_file_name, out_file_name):
 
         out_file.close()
     in_file.close()
+
+    if same_name_flag:
+        os.remove(in_file_name)
+        os.rename(out_file_name, out_file_name[:-9] + out_file_name[-4:])
 
     time_to_normalize = time.time() - start
     print('File {} normalized. Elapsed Time: {:.2f}. \n'.format(file_name, time_to_normalize))
