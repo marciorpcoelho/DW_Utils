@@ -156,8 +156,8 @@ def normalizer(file_name, in_file_name, out_file_name, same_name_flag=0):
 
     current_delimiter_count, delimiter_count = 0, 0
     prev_line, total_line, line = '', '', ''
-    with open(in_file_name) as in_file:
-        with open(out_file_name, 'w') as out_file:
+    with open(in_file_name, encoding='latin-1') as in_file:
+        with open(out_file_name, 'w', encoding='latin-1') as out_file:
 
             for line in in_file:
                 # print('prev_line: {} \nline: {}'.format(prev_line, line))
